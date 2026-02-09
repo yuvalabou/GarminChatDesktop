@@ -64,7 +64,7 @@ The app uses AI (powered by xAI's Grok) to understand your questions and provide
 ### **Option 1: Install Pre-Built Application (Easiest)**
 
 1. **Download** the installer:
-   - Go to [Releases](https://github.com/rod-trent/JunkDrawer/Installation)
+   - Go to [Releases](https://github.com/rod-trent/GarminChatDesktop/tree/main/Releases)
    - Download `GarminChatDesktop_Setup_v3.0.exe`
 
 2. **Run the installer**:
@@ -218,7 +218,7 @@ GarminChat/
 
 ## 📚 Documentation
 
-- **[API Limits Guide](https://github.com/rod-trent/JunkDrawer/blob/main/Garmin%20Chat%20Desktop/GarminAPILimits.md)** - Understanding Garmin API
+- **[API Limits Guide](https://github.com/rod-trent/GarminChatDesktop/blob/main/Code/GarminAPILimits.md)** - Understanding Garmin API
 - **[Blog Post](https://rodtrent.substack.com/p/transform-your-fitness-data-into)** - Deep dive into features
 
 ---
@@ -278,8 +278,9 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/rod-trent/JunkDrawer/issues)
+- **Issues**: [GitHub Issues](https://github.com/rod-trent/GarminChatDesktop/issues)
 - **Blog**: [Rod's Blog](https://rodtrent.substack.com/)
+- **Updates and News**: [Community](https://rodtrent.substack.com/s/garmin-chat-desktop)
 - **Twitter**: [@rodtrent](https://x.com/rodtrent)
 
 ---
@@ -292,9 +293,9 @@ If you find this useful, please star the repository! It helps others discover th
 
 ## 📈 Stats
 
-![GitHub stars](https://img.shields.io/github/stars/rod-trent/JunkDrawer?style=social)
-![GitHub forks](https://img.shields.io/github/forks/rod-trent/JunkDrawer?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/rod-trent/JunkDrawer?style=social)
+![GitHub stars](https://img.shields.io/github/stars/rod-trent/GarminChatDesktop?style=social)
+![GitHub forks](https://img.shields.io/github/forks/rod-trent/GarminChatDesktop?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/rod-trent/GarminChatDesktop?style=social)
 
 ---
 
