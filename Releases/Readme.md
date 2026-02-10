@@ -11,7 +11,7 @@ Official release packages for Garmin Chat Desktop.
 **🎉 Major Update: Choose from 5 AI Providers!**
 
 **Download:**
-- **Windows Installer**: `[GarminChatDesktop_Setup_v4.0.exe](https://github.com/rod-trent/GarminChatDesktop/blob/main/Releases/GarminChatDesktop_Setup_v4.0.exe)` 
+- **Windows Installer**: `[https://github.com/rod-trent/GarminChatDesktop/blob/main/Releases/GarminChatDesktop_Setup_v4.0.exe](GarminChatDesktop_Setup_v4.0.exe)` 
 
 **What's New:**
 - ✅ **5 AI Providers**: xAI (Grok), OpenAI (ChatGPT), Azure OpenAI, Google Gemini, Anthropic (Claude)
