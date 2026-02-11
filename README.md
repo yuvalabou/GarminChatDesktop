@@ -1,407 +1,385 @@
-# Garmin Chat Desktop v4.0
+# Garmin Chat Desktop
 
-**🎉 NEW: Multi-Provider AI Support! Choose from 5 AI providers!**
+Chat with your Garmin fitness data using AI! Ask questions about your workouts, sleep, steps, and more in natural language.
 
-A standalone desktop application for querying your Garmin Connect data using natural language and AI.
-
-[![Garmin Chat Desktop](https://github.com/rod-trent/GarminChatDesktop/raw/main/AppImages/DarkMode.jpg)](https://github.com/rod-trent/GarminChatDesktop/blob/main/AppImages/DarkMode.jpg)
-
----
-
-## 🎯 What is Garmin Chat?
-
-Garmin Chat transforms your fitness data from passive numbers into actionable insights through natural conversation. Instead of navigating through multiple screens in Garmin Connect, simply ask questions like "How did I sleep last night?" or "What was my last workout?" and get instant, AI-powered responses.
-
-**New in v4.0:** Choose your preferred AI provider! Switch between xAI (Grok), OpenAI (ChatGPT), Azure OpenAI, Google Gemini, and Anthropic (Claude).
+![Version](https://img.shields.io/badge/version-4.0.1-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 
 ---
 
-## 🆕 What's New in v4.0
+## 🎉 What's New in v4.0.1
 
-### 🎉 Multi-Provider AI Support
-**Choose from 5 AI providers:**
-- **xAI (Grok)** - Fast, conversational AI
-- **OpenAI (ChatGPT)** - Most popular, reliable
-- **Azure OpenAI** - Enterprise-ready
-- **Google Gemini** - Free tier available
-- **Anthropic (Claude)** - Long context, high quality
+**Bug Fix Release**
+- ✅ Fixed window positioning on first launch (no longer hidden under taskbar)
+- ✅ Added window state persistence (remembers position and size between sessions)
+- ✅ Enhanced center_window() with taskbar awareness and boundary checks
+- ✅ Clean shutdown with automatic state saving
 
-### ✨ New Features
-- ✅ **Save Multiple API Keys** - Store credentials for all providers
-- ✅ **Switch Providers Anytime** - Change AI provider without losing settings
-- ✅ **Automatic Model Migration** - Deprecated models updated automatically
-- ✅ **Enhanced Error Messages** - Provider-specific guidance and troubleshooting
-- ✅ **Rate Limit Guidance** - Smart handling of free tier limits
-- ✅ **Better Dark Mode** - Fixed hover states in Settings dialog
-- ✅ **Consistent Icons** - Proper gear icon everywhere
+[See full changelog](CHANGELOG.md)
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
-### **💬 Natural Language Interface**
-- Ask questions in plain English about your fitness data
-- Multi-line input field for complex queries
-- Rich markdown formatting in responses
-- Conversation history with timestamps
-- Context-aware AI remembers previous conversations
+### Multi-Provider AI Support
+Choose from 5 AI providers:
+- **xAI** (Grok) - Fast and capable
+- **OpenAI** (GPT-4, GPT-4 Turbo, GPT-3.5) - Industry standard
+- **Azure OpenAI** - Enterprise deployment
+- **Google Gemini** - Google's latest AI
+- **Anthropic Claude** - Advanced reasoning
 
-### **🤖 Flexible AI Provider Selection**
-- **5 providers to choose from** - Pick what works best for you
-- **Cost flexibility** - Free tier (Gemini) to premium (Claude)
-- **Easy switching** - Change providers in Settings without losing data
-- **Smart fallbacks** - If one provider has issues, switch to another
-- **Model selection** - Choose specific models per provider
+### Comprehensive Garmin Data Access
+- 📊 **Activities**: Workouts, runs, walks, bike rides, strength training
+- 😴 **Sleep**: Duration, quality, REM, deep sleep, awake time
+- 👣 **Steps**: Daily steps, distance, active minutes
+- ❤️ **Heart Rate**: Resting, max, zones, variability (HRV)
+- 🔋 **Body Battery**: Energy levels throughout the day
+- 😰 **Stress**: Stress levels and patterns
+- 💪 **Fitness**: VO2 Max, training status, training load
+- 🍎 **Nutrition**: Calories, macros, hydration
+- 🏃 **Training**: Performance metrics, recovery time
+- 📈 **More**: SpO2, respiration, floors climbed, and more
 
-### **🔐 Secure Credential Management**
-- All API keys stored securely in the app
-- Separate configuration for each provider
-- Garmin credentials encrypted locally
-- Show/hide toggles for sensitive information
-- No .env files needed
-
-### **🚀 Smart Auto-Connect**
-- Optional auto-login on startup
-- Persistent MFA token storage (authenticate once, works for ~30 days)
-- Automatic token refresh when expired
-- Graceful fallback to MFA when needed
-
-### **🎨 Modern Fluent Design Interface**
-- Windows 11-inspired Fluent Design aesthetic
-- **🌙 Dark Mode** - Toggle between light and dark themes
-- Provider indicator showing current AI
-- Enhanced Settings dialog with provider selection
-- Responsive layout with proper spacing
-
-### **📊 Comprehensive Garmin Data Access**
-- 14+ health metrics (Body Battery, stress, HRV, VO2 Max, etc.)
-- Recent activities with detailed stats
-- Sleep tracking and analysis
-- Heart rate and training data
-- Nutrition tracking
-- All data types supported by Garmin Connect
+### User Experience
+- 🌙 **Dark Mode**: Easy on the eyes
+- 💬 **Natural Conversations**: Ask questions like you would a fitness coach
+- 📅 **Smart Date Detection**: "last week", "yesterday", "this month"
+- 🔄 **Auto-Login**: Securely save your credentials
+- 📝 **Chat History**: Review past conversations
+- ⚡ **Quick Questions**: One-click common queries
+- 🎨 **Modern UI**: Clean, intuitive interface
 
 ---
 
-## 🤖 AI Provider Comparison
+## 📦 Download & Install
 
-| Provider | Best For | Free Tier | Paid Starting | Setup Difficulty |
-|----------|----------|-----------|---------------|------------------|
-| **xAI (Grok)** | Fast responses, casual use | No | ~$2/1M tokens | ⭐ Easy |
-| **OpenAI (ChatGPT)** | Reliability, most tested | No | $0.15/1M tokens | ⭐ Easy |
-| **Azure OpenAI** | Enterprise, compliance | No | Custom pricing | ⭐⭐ Moderate |
-| **Google Gemini** | Budget-conscious, free tier | **Yes** | $0.15/1M tokens | ⭐⭐⭐⭐ Complex |
-| **Anthropic (Claude)** | Long context, quality | No | $0.25/1M tokens | ⭐ Easy |
+### Option 1: Windows Installer (Recommended)
+1. Download the latest installer from [Releases](https://github.com/rod-trent/GarminChatDesktop/releases/latest)
+2. Run `GarminChatDesktop_Setup_v4.0.1.exe`
+3. Follow the installation wizard
+4. Launch from Start Menu or desktop shortcut
 
-**Recommendation:**
-- **New users**: Start with **OpenAI gpt-4o-mini** (cheap, reliable)
-- **Free tier**: Try **Gemini** (but note rate limits)
-- **Best quality**: Use **Anthropic Claude**
-- **Enterprise**: Consider **Azure OpenAI**
+### Option 2: Portable Executable
+1. Download `GarminChat.exe` from [Releases](https://github.com/rod-trent/GarminChatDesktop/releases/latest)
+2. Place in any folder
+3. Run directly (no installation needed)
+
+### Option 3: Run from Source
+```bash
+# Clone repository
+git clone https://github.com/rod-trent/GarminChatDesktop.git
+cd GarminChatDesktop
+
+# Install dependencies
+pip install -r requirements-desktop.txt
+
+# Run application
+python GarminChatDesktop.py
+```
+
+---
+
+## 🚀 Quick Start
+
+### First Time Setup
+
+1. **Launch Application**
+   - Windows installer: Start Menu → Garmin Chat
+   - Portable: Double-click `GarminChat.exe`
+   - Source: `python GarminChatDesktop.py`
+
+2. **Open Settings** (gear icon in top-right)
+
+3. **Configure AI Provider**
+   - Select your preferred AI provider
+   - Enter API key ([Get API keys](#-getting-api-keys))
+   - Choose model (or use default)
+
+4. **Configure Garmin Connect**
+   - Enter your Garmin email
+   - Enter your Garmin password
+   - Check "Auto-login" (optional but recommended)
+
+5. **Save Settings**
+
+6. **Start Chatting!**
+   - "How many steps did I take today?"
+   - "What was my last workout?"
+   - "How did I sleep last night?"
+   - "Show me my activities from last week"
+
+---
+
+## 🔑 Getting API Keys
+
+### xAI (Grok) - Recommended for Speed
+1. Go to https://console.x.ai/
+2. Sign in or create account
+3. Navigate to API Keys
+4. Create new key
+5. Copy and paste into Garmin Chat settings
+
+**Cost**: Pay-as-you-go, very affordable for personal use
+
+### OpenAI (ChatGPT)
+1. Go to https://platform.openai.com/api-keys
+2. Sign in or create account
+3. Create new secret key
+4. Copy and paste into settings
+
+**Models**: GPT-4, GPT-4 Turbo, GPT-3.5 Turbo
+
+### Google Gemini
+1. Go to https://makersuite.google.com/app/apikey
+2. Sign in with Google account
+3. Create API key
+4. Copy and paste into settings
+
+**Models**: Gemini Pro, Gemini Pro Vision
+
+### Anthropic Claude
+1. Go to https://console.anthropic.com/
+2. Create account
+3. Navigate to API Keys
+4. Create new key
+5. Copy and paste into settings
+
+**Models**: Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku
+
+### Azure OpenAI (Enterprise)
+1. Go to https://portal.azure.com/
+2. Create Azure OpenAI resource
+3. Deploy a model
+4. Get endpoint URL, API key, and deployment name
+5. Enter all three in Garmin Chat settings
+
+---
+
+## 💬 Example Questions
+
+### Activities & Workouts
+- "What did I do today?"
+- "Show me my last 5 workouts"
+- "How many calories did I burn this week?"
+- "What was my longest run this month?"
+- "Compare my activities from last week to this week"
+
+### Sleep
+- "How did I sleep last night?"
+- "What was my average sleep time this week?"
+- "How much deep sleep did I get?"
+- "Show me my sleep patterns for the past month"
+
+### Steps & Movement
+- "How many steps did I take today?"
+- "Did I reach my step goal?"
+- "What's my average daily steps this week?"
+- "How many floors did I climb today?"
+
+### Heart Rate & Fitness
+- "What was my resting heart rate this morning?"
+- "Show me my heart rate during my last workout"
+- "What's my current VO2 Max?"
+- "Am I training too hard?"
+
+### Body Metrics
+- "What's my body battery right now?"
+- "How stressed was I today?"
+- "Show me my respiration rate"
+- "What's my SpO2 level?"
+
+### Date Ranges
+- "Show me everything from last week"
+- "What did I do between January 1st and January 15th?"
+- "Compare this month to last month"
+- "Show me my activities from the past 30 days"
+
+---
+
+## 🛠️ Building from Source
+
+### Prerequisites
+- Python 3.12 or 3.13
+- Windows 10/11 (tested platforms)
+- Git
+
+### Setup Development Environment
+
+```bash
+# Clone repository
+git clone https://github.com/rod-trent/GarminChatDesktop.git
+cd GarminChatDesktop
+
+# Install dependencies
+pip install -r requirements-desktop.txt
+
+# Run application
+python GarminChatDesktop.py
+```
+
+### Building Executable
+
+**1. Install PyInstaller:**
+```bash
+pip install pyinstaller
+```
+
+**2. Build:**
+```bash
+build.bat
+```
+
+This creates `dist\GarminChat.exe`
+
+**3. Create Installer (Optional):**
+- Install [Inno Setup](https://jrsoftware.org/isinfo.php)
+- Open `installer.iss` in Inno Setup Compiler
+- Click Build → Compile
+- Installer created in `installer\` folder
 
 ---
 
 ## 📋 Requirements
 
-- **Python 3.12 or 3.13** (recommended)
-- **Tkinter** (usually included with Python)
-- **An API key** from your chosen AI provider:
-  - xAI: https://console.x.ai/
-  - OpenAI: https://platform.openai.com/api-keys
-  - Gemini: https://makersuite.google.com/app/apikey
-  - Anthropic: https://console.anthropic.com/
-  - Azure: https://portal.azure.com/
-- **A Garmin Connect account** with MFA enabled
-
----
-
-## 🚀 Quick Start (Windows)
-
-### **First Time Setup:**
-
-1. **Download Latest Release**
-   - Go to [Releases](https://github.com/rod-trent/GarminChatDesktop/releases)
-   - Download `GarminChatDesktop_Setup_v4.0.exe`
-   - Run installer
-
-   **OR download source code:**
-   - Download `garmin-chat-v4.0-release.zip`
-   - Extract to a folder
-
-2. **Run Setup.bat**
-   - Double-click `Setup.bat`
-   - Installs all Python dependencies
-   - Takes ~30 seconds
-
-3. **Run Startup.bat**
-   - Double-click `Startup.bat`
-   - App opens and shows Settings dialog
-
-4. **Configure Your AI Provider**
-   - **Select a provider** (radio buttons)
-   - **Enter API key** for your chosen provider
-   - **Choose model** (dropdown)
-   - **Enter Garmin credentials**
-   - **Enable auto-login** (recommended)
-   - Click **Save**
-
-5. **Connect & Start Chatting**
-   - Click "🔐 Connect to Garmin"
-   - Enter MFA code if prompted
-   - Start asking questions!
-
-### **Every Time After:**
-Just double-click **Startup.bat** - that's it!
-
----
-
-## ⚙️ Settings & Configuration
-
-### **AI Provider Settings:**
-
-**Select Your Provider:**
-- ⚪ xAI (Grok)
-- ⚪ OpenAI (ChatGPT)
-- ⚪ Azure OpenAI
-- ⚪ Google Gemini
-- ⚪ Anthropic (Claude)
-
-**Enter API Key:**
-- Get from provider's website (links in Settings)
-- Keys are masked for security
-- All keys are saved - switch providers anytime!
-
-**Choose Model:**
-- Each provider has multiple models
-- Dropdown shows available options
-- Current models auto-updated
-
-**Azure-Specific:**
-- Endpoint URL
-- Deployment name
-- API key
-
-### **Garmin Connect Credentials:**
-- Email and password
-- Password masked with show/hide toggle
-- Credentials encrypted locally
-
-### **Application Preferences:**
-- ☑ Auto-connect on startup
-- 🌙 Dark mode toggle
-
-### **Storage Locations:**
-- **Settings**: `~/.garmin_chat/config.json`
-- **Chat history**: `~/.garmin_chat/chat_history/`
-- **Garmin tokens**: `~/.garmin_tokens/`
-
----
-
-## 🎮 Using the App
-
-### **Main Interface:**
-
-**Header:**
-- **AI Provider Badge** - Shows current provider (e.g., "xAI (Grok)")
-- **🔍 Search** - Search saved chats
-- **🌙 Dark Mode** - Toggle theme
-- **⚙️ Settings** - Configure providers and credentials
-
-**Controls:**
-- **🔐 Connect** - Authenticate with Garmin
-- **🔄 Refresh** - Sync latest data
-- **🗑️ Reset** - Clear conversation
-- **💾 Prompts** - Saved questions
-- **📝 Save** - Save current chat
-- **📂 History** - View past chats
-- **📄 Export** - Export as PDF/Word/Text
-
-**Example Questions:**
-- "How many steps did I take today?"
-- "What was my last workout?"
-- "How did I sleep last night?"
-- "What's my Body Battery status?"
-- "Show me my recent activities"
-
----
-
-## 🔄 Switching AI Providers
-
-### **How to Switch:**
-1. Open **⚙️ Settings**
-2. Select a different **AI Provider** (radio button)
-3. API key for that provider auto-loads (if saved)
-4. **Choose model** from dropdown
-5. Click **Save**
-
-The app instantly switches to the new provider - conversation resets but Garmin data remains connected.
-
-### **Why Switch?**
-- **Provider down** - Use backup provider
-- **Rate limited** - Switch to different provider temporarily
-- **Cost** - Use cheaper provider for simple queries
-- **Quality** - Use premium provider for complex analysis
-
----
-
-## 🐛 Troubleshooting
-
-### **Provider-Specific Issues:**
-
-**Gemini Rate Limits:**
-- Free tier: 15 requests/minute
-- Solution: Wait 60 seconds or switch to another provider
-- Or upgrade: https://console.cloud.google.com/
-
-**OpenAI Quota Exceeded:**
-- Add credits: https://platform.openai.com/account/billing
-- Or switch to Gemini (free tier)
-
-**Model Deprecated:**
-- App auto-migrates to current models
-- Check Settings → Choose updated model
-- Save and retry
-
-**xAI/Anthropic/Azure:**
-- Check API key is valid
-- Verify billing is set up
-- Review provider dashboard
-
-### **General Issues:**
-
-**"Python is not installed"**
-- Install Python 3.12+ from python.org
-- Check "Add Python to PATH"
-
-**"Configuration Required"**
-- Open Settings
-- Select AI provider
-- Enter API key and Garmin credentials
-- Save
-
-**MFA Code Errors:**
-- Enter 6-digit code within 30 seconds
-- If CSRF error: Wait and retry
-- Tokens valid for ~30 days
-
----
-
-## 📦 Building from Source
-
-### **Create Executable:**
-
-```bash
-# Install PyInstaller
-pip install pyinstaller
-
-# Build
-pyinstaller --clean --noconfirm GarminChatDesktop.spec
+### Python Packages
+```
+garminconnect>=0.2.0
+garth>=0.4.0
+openai>=1.0.0
+anthropic>=0.18.0
+google-generativeai>=0.3.0
+requests>=2.31.0
 ```
 
-**Result:** `dist\GarminChat.exe`
+Full list in [requirements-desktop.txt](requirements-desktop.txt)
 
-### **Create Installer:**
-
-1. Install [Inno Setup](https://jrsoftware.org/isinfo.php)
-2. Open `installer.iss` in Inno Setup Compiler
-3. Click Build → Compile
-4. Installer created: `installer\GarminChatDesktop_Setup_v4.0.exe`
-
-See `BUILD-INSTRUCTIONS.md` in the release package for detailed steps.
+### System Requirements
+- **OS**: Windows 10/11, macOS, Linux
+- **Python**: 3.12 or 3.13
+- **RAM**: 2GB minimum
+- **Disk**: 100MB for application + space for dependencies
+- **Network**: Internet connection required
 
 ---
 
-## 🆚 Advantages Over Other Solutions
+## 🔒 Privacy & Security
 
-| Feature | Web Version | Desktop v3.x | **Desktop v4.0** |
-|---------|-------------|--------------|------------------|
-| Browser needed | ✅ Yes | ❌ No | ❌ No |
-| AI Provider choice | ❌ No | ❌ No | ✅ **5 providers** |
-| Switch providers | ❌ No | ❌ No | ✅ **Instant** |
-| Provider fallback | ❌ No | ❌ No | ✅ **Yes** |
-| Free AI option | ❌ No | ❌ No | ✅ **Gemini** |
-| Auto model migration | ❌ No | ❌ No | ✅ **Yes** |
-| Rate limit guidance | ❌ No | ❌ No | ✅ **Yes** |
-| Dark mode | ❌ No | ✅ Yes | ✅ Yes |
-| Chat history | ❌ No | ✅ Yes | ✅ Yes |
-| Export reports | ❌ No | ✅ Yes | ✅ Yes |
+### Data Storage
+- **Credentials**: Stored locally in `%USERPROFILE%\.garmin_chat\config.json`
+- **Garmin Tokens**: Stored locally in `%USERPROFILE%\.garmin_tokens\`
+- **No Cloud Storage**: Everything stays on your machine
+- **No Telemetry**: App doesn't send usage data
 
----
+### Data Transmission
+- **Garmin Connect**: Standard OAuth authentication
+- **AI Providers**: Only queries and data you explicitly send
+- **No Third Parties**: Your data isn't shared
 
-## 📝 Version History
-
-### **v4.0.0 (February 2025) - CURRENT**
-🎉 **Multi-Provider AI Support**
-- 5 AI providers to choose from
-- Save multiple API keys
-- Switch providers anytime
-- Automatic model migration
-- Enhanced error handling
-- Provider-specific guidance
-- Dark mode improvements
-
-### **v3.1.0 (January 2025)**
-- 14 health metrics
-- Enhanced nutrition tracking
-- Improved date range detection
-
-### **v3.0.0 (December 2024)**
-- Desktop GUI application
-- Dark mode
-- Chat history & search
-- Export to PDF/Word/Text
+### Security Best Practices
+- ✅ Enable MFA on your Garmin account
+- ✅ Keep your API keys secure
+- ✅ Don't share your config.json file
+- ✅ Use strong passwords
+- ✅ Keep the app updated
 
 ---
 
-## 🔒 Security & Privacy
+## 🤝 Contributing
 
-- **Local storage only** - No cloud sync
-- **Encrypted credentials** - Secure local storage
-- **Multiple API keys** - All stored securely
-- **No telemetry** - No usage tracking
-- **No data sharing** - Your data stays private
+Contributions are welcome! This project is part of my [JunkDrawer](https://github.com/rod-trent/JunkDrawer) collection of practical tools.
+
+### Ways to Contribute
+- 🐛 Report bugs
+- 💡 Suggest features
+- 📝 Improve documentation
+- 🔧 Submit pull requests
+
+[Open an issue](https://github.com/rod-trent/GarminChatDesktop/issues)
 
 ---
 
-## 📜 License
+## 📝 License
 
-MIT License - See [LICENSE](LICENSE) file
+MIT License - See [LICENSE](LICENSE.txt) for details
+
+---
+
+## 🆘 Support
+
+### Having Issues?
+1. Check [Releases README](Releases/Readme.md) for version-specific info
+2. Review [CHANGELOG](CHANGELOG.md) for known issues
+3. Search [existing issues](https://github.com/rod-trent/GarminChatDesktop/issues)
+4. Open a [new issue](https://github.com/rod-trent/GarminChatDesktop/issues/new) with:
+   - Version number
+   - Error message (if any)
+   - Steps to reproduce
+   - Screenshots (helpful!)
+
+### Common Issues
+
+**"Invalid credentials" error:**
+- Verify Garmin email and password
+- Check if MFA is enabled (may require token-based auth)
+- Try logging into garminconnect.garmin.com directly
+
+**"API key invalid" error:**
+- Verify API key is copied correctly
+- Check for extra spaces
+- Ensure key is active in provider dashboard
+- Try regenerating the key
+
+**Window position issues (v4.0.0 only):**
+- Fixed in v4.0.1! Download latest release
+
+**App won't start:**
+- Check Python version (3.12+ required)
+- Verify all dependencies installed
+- Try running from command line to see errors
 
 ---
 
 ## 🔗 Links
 
-- **Latest Release**: [Releases](https://github.com/rod-trent/GarminChatDesktop/releases)
-- **Source Code**: [Code](https://github.com/rod-trent/GarminChatDesktop/tree/main/Code)
-- **Issues**: [Report Issues](https://github.com/rod-trent/GarminChatDesktop/issues)
-- **FAQ**: [Frequently Asked Questions](FAQ.md)
+- **Author**: Rod Trent
+- **Blog**: [Substack](https://rodtrent.substack.com/)
+- **GitHub**: [@rod-trent](https://github.com/rod-trent)
+- **JunkDrawer**: [More tools](https://github.com/rod-trent/JunkDrawer)
+- **Issues**: [Report problems](https://github.com/rod-trent/GarminChatDesktop/issues)
 
 ---
 
-## 🙏 Acknowledgments
+## 📊 Version History
 
-- **Garmin Connect** - Fitness data platform
-- **xAI, OpenAI, Anthropic, Google, Azure** - AI providers
-- **garminconnect/garth** - Python libraries
-- **Tkinter** - Python GUI framework
+- **v4.0.1** (February 2025) - Window positioning bug fixes
+- **v4.0.0** (February 2025) - Multi-provider AI support
+- **v3.1.0** (January 2025) - 14 health metrics, nutrition tracking
+- **v3.0.0** (January 2025) - Desktop app with GUI
+- **v2.0.0** (December 2024) - Added sleep and activity tracking
+- **v1.0.0** (December 2024) - Initial release
 
----
-
-## 💡 Getting Help
-
-1. Check [FAQ.md](FAQ.md)
-2. Review this README
-3. Check [Issues](https://github.com/rod-trent/GarminChatDesktop/issues)
-4. Read `BUILD-INSTRUCTIONS.md` for build issues
+[Full Changelog](CHANGELOG.md)
 
 ---
 
-**Ready to transform your fitness data into insights with your choice of AI?**
+## ⭐ Acknowledgments
 
-Download the latest release, pick your AI provider, and start chatting! 🏃‍♂️💪🤖
+Built with:
+- [garminconnect](https://github.com/cyberjunky/python-garminconnect) - Garmin Connect API
+- [OpenAI](https://openai.com/) - GPT models
+- [xAI](https://x.ai/) - Grok models
+- [Google](https://ai.google.dev/) - Gemini models
+- [Anthropic](https://www.anthropic.com/) - Claude models
+- [Tkinter](https://docs.python.org/3/library/tkinter.html) - GUI framework
 
 ---
 
-## ⭐ Star This Repo
+<div align="center">
 
-If you find Garmin Chat Desktop useful, please consider starring the repository!
+**Made with ❤️ by Rod Trent**
+
+[⬆ Back to Top](#garmin-chat-desktop)
+
+</div>
