@@ -551,6 +551,295 @@ class GarminDataHandler:
             logger.error(f"Error fetching activities by date: {e}")
             return []
     
+    def get_activity_details(self, activity_id: int) -> Dict:
+        """
+        Get detailed data for a specific activity.
+        
+        For strength training activities, this includes:
+        - Individual exercises performed
+        - Sets and reps for each exercise
+        - Weight/resistance used
+        - Rest times between sets
+        - Exercise order and structure
+        
+        Args:
+            activity_id: The Garmin activity ID
+            
+        Returns:
+            Detailed activity dictionary with all available data
+        """
+        self._ensure_authenticated()
+        try:
+            details = self.client.get_activity_details(activity_id)
+            return details if details else {}
+        except Exception as e:
+            logger.error(f"Error fetching activity details for {activity_id}: {e}")
+            return {}
+    
+    def get_strength_training_details(self, activity_id: int) -> Dict:
+        """
+        Parse and structure strength training specific data from an activity.
+        
+        Returns detailed information about:
+        - Each exercise performed (name, category)
+        - Sets, reps, and weight for each exercise
+        - Rest times between sets
+        - Volume metrics (total sets, reps, weight lifted)
+        - Workout duration and calories
+        
+        Args:
+            activity_id: The Garmin activity ID
+            
+        Returns:
+            Dictionary with structured strength training data:
+            {
+                'activity_id': int,
+                'activity_name': str,
+                'date': str,
+                'duration_minutes': int,
+                'calories': int,
+                'exercises': [
+                    {
+                        'name': str,
+                        'category': str,
+                        'sets': [
+                            {
+                                'set_number': int,
+                                'reps': int,
+                                'weight': float,
+                                'weight_unit': str,
+                                'duration_seconds': int
+                            }
+                        ],
+                        'rest_times': [int],  # seconds
+                        'total_reps': int,
+                        'total_volume': float
+                    }
+                ],
+                'metrics': {
+                    'total_exercises': int,
+                    'total_sets': int,
+                    'total_reps': int,
+                    'total_volume': float,
+                    'average_rest_time': float
+                }
+            }
+            
+            Returns {'error': str} if not a strength training activity or data unavailable
+        """
+        self._ensure_authenticated()
+        
+        try:
+            # Get detailed activity data
+            details = self.get_activity_details(activity_id)
+            
+            if not details:
+                return {'error': 'Could not fetch activity details'}
+            
+            # Check if this is a strength training activity
+            activity_type = details.get('activityType', {}).get('typeKey', '')
+            if 'strength' not in activity_type.lower():
+                return {
+                    'error': f'Not a strength training activity (type: {activity_type})',
+                    'activity_type': activity_type
+                }
+            
+            # Extract basic activity info
+            activity_name = details.get('activityName', 'Strength Training')
+            start_time = details.get('startTimeLocal', '')
+            duration_seconds = details.get('duration', 0)
+            calories = details.get('calories', 0)
+            
+            # Parse exercise sets data
+            exercises = []
+            total_sets = 0
+            total_reps = 0
+            total_volume = 0
+            all_rest_times = []
+            
+            # The structure varies by Garmin device and how workout was recorded
+            # Try multiple possible data locations
+            exercise_sets = details.get('exerciseSets', []) or details.get('sets', [])
+            
+            for exercise_data in exercise_sets:
+                exercise_name = exercise_data.get('exerciseName') or exercise_data.get('category', 'Unknown Exercise')
+                category = exercise_data.get('category', '')
+                
+                exercise_info = {
+                    'name': exercise_name,
+                    'category': category,
+                    'sets': [],
+                    'rest_times': [],
+                    'total_reps': 0,
+                    'total_volume': 0
+                }
+                
+                # Parse individual sets
+                set_number = 0
+                sets_data = exercise_data.get('sets', [])
+                
+                for set_data in sets_data:
+                    set_type = set_data.get('setType', '')
+                    
+                    if set_type == 'ACTIVE' or set_type == 'active':
+                        set_number += 1
+                        reps = set_data.get('repetitions', 0) or set_data.get('reps', 0)
+                        weight = set_data.get('weight', 0)
+                        weight_unit = set_data.get('weightDisplayUnit', 'lb')
+                        duration = set_data.get('duration', 0)
+                        
+                        set_info = {
+                            'set_number': set_number,
+                            'reps': reps,
+                            'weight': weight,
+                            'weight_unit': weight_unit,
+                            'duration_seconds': duration
+                        }
+                        
+                        exercise_info['sets'].append(set_info)
+                        exercise_info['total_reps'] += reps
+                        
+                        if weight and reps:
+                            set_volume = weight * reps
+                            exercise_info['total_volume'] += set_volume
+                        
+                        total_sets += 1
+                        total_reps += reps
+                    
+                    elif set_type == 'REST' or set_type == 'rest':
+                        rest_duration = set_data.get('duration', 0)
+                        if rest_duration > 0:
+                            exercise_info['rest_times'].append(rest_duration)
+                            all_rest_times.append(rest_duration)
+                
+                # Only add exercise if it has sets
+                if exercise_info['sets']:
+                    total_volume += exercise_info['total_volume']
+                    exercises.append(exercise_info)
+            
+            # Calculate average rest time
+            avg_rest_time = sum(all_rest_times) / len(all_rest_times) if all_rest_times else 0
+            
+            return {
+                'activity_id': activity_id,
+                'activity_name': activity_name,
+                'date': start_time[:10] if start_time else '',
+                'start_time': start_time,
+                'duration_minutes': duration_seconds // 60,
+                'duration_seconds': duration_seconds,
+                'calories': calories,
+                'exercises': exercises,
+                'metrics': {
+                    'total_exercises': len(exercises),
+                    'total_sets': total_sets,
+                    'total_reps': total_reps,
+                    'total_volume': round(total_volume, 1),
+                    'average_rest_time': round(avg_rest_time, 1)
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Error parsing strength training details: {e}")
+            return {'error': f'Error parsing strength training data: {str(e)}'}
+    
+    def find_strength_training_activities(self, limit: int = 20) -> List[Dict]:
+        """
+        Find recent strength training activities.
+        
+        Args:
+            limit: Number of recent activities to search through
+            
+        Returns:
+            List of strength training activities with basic info
+        """
+        self._ensure_authenticated()
+        
+        try:
+            activities = self.get_activities(limit=limit)
+            strength_activities = []
+            
+            for activity in activities:
+                activity_type = activity.get('activityType', {}).get('typeKey', '')
+                if 'strength' in activity_type.lower() or 'training' in activity_type.lower():
+                    strength_activities.append({
+                        'activity_id': activity.get('activityId'),
+                        'name': activity.get('activityName', 'Strength Training'),
+                        'date': activity.get('startTimeLocal', '')[:10],
+                        'duration_minutes': activity.get('duration', 0) // 60,
+                        'calories': activity.get('calories', 0)
+                    })
+            
+            return strength_activities
+            
+        except Exception as e:
+            logger.error(f"Error finding strength training activities: {e}")
+            return []
+    
+    def format_strength_training_for_display(self, strength_data: Dict) -> str:
+        """
+        Format strength training data into a readable string for AI context or display.
+        
+        Args:
+            strength_data: Dictionary from get_strength_training_details()
+            
+        Returns:
+            Formatted string with exercise details, sets, reps, weights
+        """
+        if 'error' in strength_data:
+            return f"Error: {strength_data['error']}"
+        
+        output = []
+        output.append(f"**{strength_data['activity_name']}**")
+        output.append(f"Date: {strength_data['date']}")
+        output.append(f"Duration: {strength_data['duration_minutes']} minutes")
+        output.append(f"Calories: {strength_data['calories']}")
+        output.append("")
+        
+        # List exercises
+        exercises = strength_data.get('exercises', [])
+        if exercises:
+            output.append("**Exercises Performed:**")
+            output.append("")
+            
+            for i, exercise in enumerate(exercises, 1):
+                output.append(f"{i}. **{exercise['name']}**")
+                
+                # Show sets
+                for set_info in exercise['sets']:
+                    weight_str = ""
+                    if set_info['weight'] > 0:
+                        weight_str = f" @ {set_info['weight']} {set_info['weight_unit']}"
+                    
+                    output.append(f"   Set {set_info['set_number']}: {set_info['reps']} reps{weight_str}")
+                
+                # Show rest times if available
+                if exercise['rest_times']:
+                    avg_rest = sum(exercise['rest_times']) / len(exercise['rest_times'])
+                    output.append(f"   Rest: {avg_rest:.0f}s average")
+                
+                # Show exercise totals
+                if exercise['total_volume'] > 0:
+                    output.append(f"   Total: {exercise['total_reps']} reps, {exercise['total_volume']:.1f} lbs volume")
+                else:
+                    output.append(f"   Total: {exercise['total_reps']} reps")
+                
+                output.append("")
+        
+        # Show workout summary
+        metrics = strength_data.get('metrics', {})
+        output.append("**Workout Summary:**")
+        output.append(f"- Total Exercises: {metrics.get('total_exercises', 0)}")
+        output.append(f"- Total Sets: {metrics.get('total_sets', 0)}")
+        output.append(f"- Total Reps: {metrics.get('total_reps', 0)}")
+        
+        if metrics.get('total_volume', 0) > 0:
+            output.append(f"- Total Volume: {metrics.get('total_volume', 0):,.1f} lbs")
+        
+        if metrics.get('average_rest_time', 0) > 0:
+            output.append(f"- Average Rest: {metrics.get('average_rest_time', 0):.0f}s")
+        
+        return "\n".join(output)
+    
     def get_steps_data(self, date: Optional[str] = None) -> Dict:
         """
         Get steps data for a specific date.
@@ -1073,7 +1362,8 @@ class GarminDataHandler:
             data_type: Type of data to format
                       Options: "summary", "activities", "steps", "sleep", "all",
                                "body_battery", "stress", "nutrition", "floors", 
-                               "intensity", "spo2", "hrv", "training", "comprehensive"
+                               "intensity", "spo2", "hrv", "training", "comprehensive",
+                               "strength" (detailed strength training data)
             activity_limit: Number of activities to include (default: 5, max recommended: 20)
             
         Returns:
@@ -1083,6 +1373,7 @@ class GarminDataHandler:
             - Increase activity_limit for queries about longer time periods
             - Keep under 20 activities to avoid token limits in AI context
             - Use "comprehensive" for detailed health metrics (Body Battery, stress, HRV, etc.)
+            - Use "strength" for detailed exercise, sets, reps, and weight data
         """
         self._ensure_authenticated()
         
@@ -1118,9 +1409,15 @@ class GarminDataHandler:
                     
                     context_parts.append(f"{i}. {act_name} ({act_type})")
                     context_parts.append(f"   Date: {start_time}")
-                    context_parts.append(f"   Distance: {distance:.2f} km")
+                    if distance > 0:
+                        context_parts.append(f"   Distance: {distance:.2f} km")
                     context_parts.append(f"   Duration: {duration:.1f} minutes")
                     context_parts.append(f"   Calories: {calories}")
+                    
+                    # Add note for strength training activities
+                    if 'strength' in act_type.lower():
+                        context_parts.append(f"   💪 Strength Training - detailed exercise data available")
+                    
                     context_parts.append("")
         
         if data_type == "sleep" or data_type == "all":
@@ -1294,5 +1591,37 @@ class GarminDataHandler:
                     context_parts.append("")
             except:
                 pass
+        
+        # Strength Training detailed data
+        if data_type == "strength":
+            strength_activities = self.find_strength_training_activities(limit=activity_limit)
+            
+            if strength_activities:
+                context_parts.append(f"=== Recent Strength Training ({len(strength_activities)} workouts) ===")
+                context_parts.append("")
+                
+                for i, st_activity in enumerate(strength_activities, 1):
+                    # Get detailed data for this strength workout
+                    details = self.get_strength_training_details(st_activity['activity_id'])
+                    
+                    if 'error' not in details:
+                        # Format the detailed workout
+                        formatted = self.format_strength_training_for_display(details)
+                        context_parts.append(formatted)
+                        context_parts.append("")
+                        context_parts.append("---")
+                        context_parts.append("")
+                    else:
+                        # Fallback to basic info if details unavailable
+                        context_parts.append(f"{i}. {st_activity['name']}")
+                        context_parts.append(f"   Date: {st_activity['date']}")
+                        context_parts.append(f"   Duration: {st_activity['duration_minutes']} minutes")
+                        context_parts.append(f"   Calories: {st_activity['calories']}")
+                        context_parts.append(f"   (Detailed exercise data not available)")
+                        context_parts.append("")
+            else:
+                context_parts.append("=== Strength Training ===")
+                context_parts.append("No strength training activities found in recent workouts.")
+                context_parts.append("")
         
         return "\n".join(context_parts) if context_parts else "No data available"

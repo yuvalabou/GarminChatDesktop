@@ -458,6 +458,7 @@ class GarminChatApp:
         self.garmin_password = None
         self.auto_login = True  # Default to auto-login enabled
         self.dark_mode = False  # Start in light mode
+        self.window_state_restored = False  # Track if window position was restored
         
         # Load configuration
         self.load_config()
@@ -468,8 +469,12 @@ class GarminChatApp:
         # Create UI
         self.create_widgets()
         
-        # Center window on screen
-        self.center_window()
+        # Center window on screen (only if no saved state was restored)
+        if not self.window_state_restored:
+            self.center_window()
+        
+        # Set up window close handler to save state
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         
         # Check if credentials are configured
         current_ai_key = self.get_current_ai_key()
@@ -530,6 +535,39 @@ class GarminChatApp:
                     self.garmin_password = config.get('garmin_password', '')
                     self.auto_login = config.get('auto_login', True)
                     self.dark_mode = config.get('dark_mode', False)
+                    
+                    # Window state (position and size)
+                    window_state = config.get('window_state', {})
+                    if window_state:
+                        try:
+                            width = window_state.get('width', 1200)
+                            height = window_state.get('height', 950)
+                            x = window_state.get('x')
+                            y = window_state.get('y')
+                            
+                            # Apply saved size
+                            if x is not None and y is not None:
+                                # Validate position is on screen
+                                screen_width = self.root.winfo_screenwidth()
+                                screen_height = self.root.winfo_screenheight()
+                                
+                                # Ensure window is visible
+                                if x + width > screen_width:
+                                    x = screen_width - width - 10
+                                if y + height > screen_height:
+                                    y = screen_height - height - 60  # Account for taskbar
+                                if x < 0:
+                                    x = 10
+                                if y < 0:
+                                    y = 10
+                                
+                                self.root.geometry(f'{width}x{height}+{x}+{y}')
+                                self.window_state_restored = True
+                                logger.info(f"Restored window state: {width}x{height}+{x}+{y}")
+                        except Exception as e:
+                            logger.warning(f"Could not restore window state: {e}")
+                            # Will use center_window() as fallback
+                    
                     logger.info("Configuration loaded")
         except Exception as e:
             logger.error(f"Error loading config: {e}")
@@ -545,6 +583,21 @@ class GarminChatApp:
     def save_config(self):
         """Save configuration to file"""
         try:
+            # Get current window state
+            try:
+                # Parse geometry string (widthxheight+x+y)
+                geometry = self.root.geometry()
+                match = geometry.split('+')
+                size = match[0].split('x')
+                window_state = {
+                    'width': int(size[0]),
+                    'height': int(size[1]),
+                    'x': int(match[1]) if len(match) > 1 else None,
+                    'y': int(match[2]) if len(match) > 2 else None
+                }
+            except:
+                window_state = {}
+            
             config = {
                 # AI Provider settings
                 'ai_provider': self.ai_provider,
@@ -563,13 +616,26 @@ class GarminChatApp:
                 'garmin_email': self.garmin_email,
                 'garmin_password': self.garmin_password,
                 'auto_login': self.auto_login,
-                'dark_mode': self.dark_mode
+                'dark_mode': self.dark_mode,
+                # Window state
+                'window_state': window_state
             }
             with open(self.config_file, 'w') as f:
                 json.dump(config, f, indent=2)
             logger.info("Configuration saved")
         except Exception as e:
             logger.error(f"Error saving config: {e}")
+    
+    def on_closing(self):
+        """Handle window close event - save state and exit"""
+        try:
+            # Save current configuration including window state
+            self.save_config()
+        except Exception as e:
+            logger.error(f"Error saving config on close: {e}")
+        finally:
+            # Close the application
+            self.root.destroy()
             
     def prompt_for_credentials(self):
         """Prompt user to enter credentials on first run"""
@@ -711,12 +777,35 @@ class GarminChatApp:
                        font=('Segoe UI', 10, 'bold'))
         
     def center_window(self):
-        """Center the window on screen"""
+        """Center the window on screen, accounting for taskbar"""
         self.root.update_idletasks()
         width = self.root.winfo_width()
         height = self.root.winfo_height()
-        x = (self.root.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.root.winfo_screenheight() // 2) - (height // 2)
+        
+        # Get screen dimensions
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        
+        # Calculate center position
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Ensure window doesn't go off-screen or under taskbar
+        # Account for typical taskbar height (40-50 pixels)
+        taskbar_height = 50
+        if y + height > screen_height - taskbar_height:
+            y = screen_height - height - taskbar_height - 10  # 10px margin
+        
+        # Ensure window doesn't go above screen
+        if y < 0:
+            y = 10
+        
+        # Ensure window doesn't go off sides
+        if x < 0:
+            x = 10
+        if x + width > screen_width:
+            x = screen_width - width - 10
+        
         self.root.geometry(f'{width}x{height}+{x}+{y}')
         
     def create_widgets(self):
