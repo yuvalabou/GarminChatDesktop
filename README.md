@@ -56,13 +56,13 @@ Choose from 5 AI providers:
 ## 📦 Download & Install
 
 ### Option 1: Windows Installer (Recommended)
-1. Download the latest installer from [Releases](https://github.com/rod-trent/GarminChatDesktop/releases/latest)
+1. Download the latest installer from [Releases](https://github.com/rod-trent/GarminChatDesktop/releases/)
 2. Run `GarminChatDesktop_Setup_v4.0.1.exe`
 3. Follow the installation wizard
 4. Launch from Start Menu or desktop shortcut
 
 ### Option 2: Portable Executable
-1. Download `GarminChat.exe` from [Releases](https://github.com/rod-trent/GarminChatDesktop/releases/latest)
+1. Download `GarminChat.exe` from [Releases](https://github.com/rod-trent/GarminChatDesktop/releases/)
 2. Place in any folder
 3. Run directly (no installation needed)
 
